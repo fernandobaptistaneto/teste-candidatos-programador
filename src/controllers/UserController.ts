@@ -29,9 +29,10 @@ export class UserController {
       return res.status(400).send({ message: "Usuário não encontrado!" });
     }
     try {
-      await UserRepository.createQueryBuilder().update(user).set({
-        deleted: () => 'CURRENT_TIMESTAMP'
-      }).where("id = :id", { id: id },).returning('*').execute()
+      // await UserRepository.createQueryBuilder().update(user).set({
+      //   deleted: () => 'CURRENT_TIMESTAMP'
+      // }).where("id = :id", { id: id },).returning('*').execute()
+      await UserRepository.softDelete(user.id);
       return res.status(200).send("Usuário deletado com sucesso!");
     } catch (error) {
       return res.status(500).json({ message: "Internal server error: ", error })

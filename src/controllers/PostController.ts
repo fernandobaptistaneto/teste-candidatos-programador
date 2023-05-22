@@ -1,3 +1,4 @@
+import { Post } from "../entities/Post";
 import { PostRepository } from "../repositories/PostsRepository";
 import { Request, Response } from "express";
 
@@ -21,7 +22,10 @@ export class PostController {
 
     try {
       const list = await PostRepository.find({
-        relations: { user: true }
+        relations: {
+          user: true,
+
+        }, withDeleted: true
       });
       return res.status(200).json({ list });
     } catch (error) {
@@ -32,11 +36,15 @@ export class PostController {
   async deletePost(req: Request, res: Response) {
     const { id } = req.query;
     try {
-      const findPost = PostRepository.findOne({ where: { id: Number(id) } })
+
+      const findPost = await PostRepository.findOne({ where: { id: Number(id) } }) as Post
       if (!findPost) {
         res.status(404).json({ message: "Post não encontrado." })
       }
-      const deleted = await PostRepository.createQueryBuilder('newschema.users').delete().where("id = :id", { id: id }).returning('*').execute()
+
+      await PostRepository.delete(findPost)
+      // const deleted = await PostRepository.createQueryBuilder('newschema.users').delete().where("id = :id", { id: id }).returning('*').execute()
+
       return res.status(200).json({ message: "Post Deleteado com sucesso!" })
     } catch (error) {
       return res.status(500).json({ message: "Internal Error: " + error });

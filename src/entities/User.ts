@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, DeleteDateColumn } from "typeorm";
 import { UserLogin } from "./UserLogin";
 import { Post } from "./Post";
 
@@ -22,10 +22,8 @@ export class User {
   @Column({ type: "timestamp with time zone" })
   updated?: Date;
 
-  @Column({ type: "timestamp with time zone" })
-  deleted?: Date;
-
-
+  @DeleteDateColumn({ name: "deleted", type: "timestamp with time zone", default: () => 'CURRENT_TIMESTAMP' })
+  deleted: Date;
 
   @OneToMany(() => UserLogin, (userLogin) => userLogin.user)
   userLogin: UserLogin[];
