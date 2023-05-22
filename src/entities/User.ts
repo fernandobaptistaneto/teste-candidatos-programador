@@ -16,6 +16,17 @@ export class User {
   @Column({ type: "varchar" })
   name: string;
 
+  @Column({ type: "timestamp with time zone" })
+  created?: Date;
+
+  @Column({ type: "timestamp with time zone" })
+  updated?: Date;
+
+  @Column({ type: "timestamp with time zone" })
+  deleted?: Date;
+
+
+
   @OneToMany(() => UserLogin, (userLogin) => userLogin.user)
   userLogin: UserLogin[];
 

@@ -18,6 +18,10 @@ export class AuthController {
       return res.status(400).send({ message: "Senha inválida!" })
     }
 
+    if (user.deleted) {
+      return res.status(500).send({ message: " Usuário deletado, contate a TI" })
+    }
+
     const token = jwt.sign({ id: user.id }, 'secret', { expiresIn: '1d' })
 
 

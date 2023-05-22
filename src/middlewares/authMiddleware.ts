@@ -13,7 +13,7 @@ export default function verifyJWT(req: Request, res: Response, next: NextFunctio
 
   if (!authorization) {
     return res.status(401).json({
-      message: 'Token Invalido!'
+      message: 'Você não está autenticado!'
     })
   }
 
@@ -27,7 +27,7 @@ export default function verifyJWT(req: Request, res: Response, next: NextFunctio
     return next()
 
   } catch (error) {
-    return res.status(401).json({ message: "Erro na verificação do Token!" })
+    return res.status(401).json({ message: "Erro na verificação do Token!" }).end()
   }
 
 }
