@@ -1,5 +1,8 @@
 import { UserRepository } from "../repositories/UserRepository";
 import { Response, Request } from "express";
+import 'moment/locale/pt-br';
+import _ from 'lodash';
+import moment from "moment";
 
 export class UserController {
 
@@ -29,9 +32,6 @@ export class UserController {
       return res.status(400).send({ message: "Usuário não encontrado!" });
     }
     try {
-      // await UserRepository.createQueryBuilder().update(user).set({
-      //   deleted: () => 'CURRENT_TIMESTAMP'
-      // }).where("id = :id", { id: id },).returning('*').execute()
       await UserRepository.softDelete(user.id);
       return res.status(200).send("Usuário deletado com sucesso!");
     } catch (error) {
@@ -60,7 +60,14 @@ export class UserController {
   }
 
   async listarUsers(req: Request, res: Response) {
-    const list = await UserRepository.find()
+    let list = await UserRepository.find()
+    moment.locale('pt-br')
+    list.forEach((item)=>{
+      item.created = moment(item.created).format('DD/MM/YYYY') as  any
+      if(item.updated){
+        item.updated = moment(item.updated).format('DD/MM/YYYY') as  any
+      }
+    })
     return res.status(200).json(list)
   }
 
